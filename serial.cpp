@@ -1,4 +1,5 @@
 #include "serial.h" 
+
 int uart_init(char* arg, int baud)
 {
     int fd;
@@ -36,6 +37,5 @@ int uart_init(char* arg, int baud)
         return -1;
     }
     return(fd);
- 
 }
  

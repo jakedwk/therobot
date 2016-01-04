@@ -1,63 +1,13 @@
-#include "opencv2/core/core.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/opencv.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/opencv.hpp"
-#include <iostream>
-#include <fstream>
-#include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <netinet/in.h>
-#include <sys/wait.h>
-#include <string.h>
-#include <strings.h>
-#include <errno.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <thread>
-#include <mutex> 
+#include "detecting.h"
 
-using namespace cv;
-using namespace std;
-class  Detect
-{
-    Rect ret;
-    time_t now_time;
-    struct tm *p;
-    char fmt_time[100];
-    bool occ;
-    int times;
-    char key;
-    String svtime,path;  //保存路径与文件名
-    VideoCapture cap;
-    vector<vector<Point> > contours;
-    Scalar color,mean;
-    Mat gray,avg,differ,frame,frameold,bigger,thresh;
-    Mat element ;
-    int sockfd,client_fd,new_server_socket;
-    struct sockaddr_in my_addr;
-    struct sockaddr_in remote_addr;
-    struct sockaddr_in their_addr;
-    vector<uchar> buff;//buffer for coding
-    vector<int> param;
-    unsigned int datasize;
-    int freeman;
-    struct timeval tpstart,tpend; 
-    float timeuse; 
-    uint vsize;
-    vector<uchar> vbuf;
-    vector<int> recv_sockets,send_sockets;
-    public:
-        Detect();
-        int ckcamera();
-        void detectinit(int i);
-        void detecting();
-};
+
+
 Detect::Detect(){};
+Detect::~Detect(){
+    
+    destroyAllWindows();
+    cap.release();
+};
 
 int Detect::ckcamera()
 {
@@ -72,6 +22,8 @@ int Detect::ckcamera()
     }
     return 1;
 }
+
+
 void Detect::detectinit(int i)
 {
 
@@ -91,9 +43,12 @@ void Detect::detectinit(int i)
 
 void Detect::detecting()
 {
+    double thresh_value;
     cap >> frame;                                        // 获取一帧图像
     cvtColor(frame, gray, COLOR_BGR2GRAY);               //转化为灰度图像
-    threshold(differ,thresh, 40, 255, THRESH_BINARY);    //根据给出的阈值二值化
+    mean = cv::mean(gray); //名称空间重复故使用cv::
+    thresh_value = mean[0]*0.4;
+    threshold(gray,thresh, thresh_value, 225, CV_THRESH_BINARY_INV);    //根据给出的阈值二值化
     dilate(thresh,bigger, element,Point(-1,-1), 1);      //膨胀图像
     findContours(bigger,contours, RETR_EXTERNAL,CHAIN_APPROX_SIMPLE);  //寻找轮廓
     for(unsigned int j = 0; j < contours.size()-1; j++ )
@@ -103,5 +58,7 @@ void Detect::detecting()
     }
     ret = boundingRect(contours[0]);
     rectangle(frame,ret,color,2);
-    
+    imshow("gray",thresh);
+    imshow("frame",frame);
+    key = waitKey(25)&0xFF;
 }
