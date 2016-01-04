@@ -51,6 +51,7 @@ class  Detect
     public:
         bool occ;
         char key;
+        ostringstream ior_dir;
         Mat gray,avg,differ,frame,frameold,bigger,thresh;
         Detect();
         ~Detect();

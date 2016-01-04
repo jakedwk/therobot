@@ -1,10 +1,8 @@
 #include "detecting.h"
 
-
-
 Detect::Detect(){};
+
 Detect::~Detect(){
-    
     destroyAllWindows();
     cap.release();
 };
@@ -54,10 +52,13 @@ void Detect::detecting()
     for(unsigned int j = 0; j < contours.size()-1; j++ )
     {
         if (contourArea(contours[0])<contourArea(contours[j+1]))
-        contours[0] = contours[j+1];
+            contours[0] = contours[j+1];
     }
     ret = boundingRect(contours[0]);
     rectangle(frame,ret,color,2);
+    ior_dir.str("");
+    ior_dir<<(ret.x + ret.width/2);
+    putText(frame,ior_dir.str(),Point(20,20),FONT_HERSHEY_DUPLEX,1,color);
     imshow("gray",thresh);
     imshow("frame",frame);
     key = waitKey(25)&0xFF;

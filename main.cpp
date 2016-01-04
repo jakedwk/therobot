@@ -3,13 +3,6 @@
 
 int main( int argc, char** argv )
 {
-    Detect dt;
-    dt.detectinit(0);
-    while(1)
-    {
-        dt.detecting();
-        if(dt.key == 'q') break;
-    }
     //int fd;
     //char a;
     //char buf[300];
@@ -19,6 +12,13 @@ int main( int argc, char** argv )
         //printf("Open uart err \n");
         //return -1;
     //}
+    Detect dt;
+    dt.detectinit(0);
+    while(1)
+    {
+        dt.detecting();
+        if(dt.key == 'q') break;
+    }
     //sprintf(buf, "Hello world !\n");   //输出内容
   
     //while(1)
