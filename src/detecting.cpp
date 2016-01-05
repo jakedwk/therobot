@@ -49,17 +49,25 @@ void Detect::detecting()
     threshold(gray,thresh, thresh_value, 225, CV_THRESH_BINARY_INV);    //根据给出的阈值二值化
     dilate(thresh,bigger, element,Point(-1,-1), 1);      //膨胀图像
     findContours(bigger,contours, RETR_EXTERNAL,CHAIN_APPROX_SIMPLE);  //寻找轮廓
-    for(unsigned int j = 0; j < contours.size()-1; j++ )
+    if(contours.size()>1)
+        for(unsigned int j = 0; j < contours.size()-1; j++ )
+        {
+            if (contourArea(contours[0])<contourArea(contours[j+1]))
+                contours[0] = contours[j+1];
+        }
+    if(contours.size()<=0||contourArea(contours[0])<50)
     {
-        if (contourArea(contours[0])<contourArea(contours[j+1]))
-            contours[0] = contours[j+1];
+        ior_dir.str("");
+        ior_dir<<"nothing";
+    }else
+    {
+        ret = boundingRect(contours[0]);
+        rectangle(frame,ret,color,2);
+        ior_dir.str("");
+        ior_dir<<(ret.x + ret.width/2);
     }
-    ret = boundingRect(contours[0]);
-    rectangle(frame,ret,color,2);
-    ior_dir.str("");
-    ior_dir<<(ret.x + ret.width/2);
-    putText(frame,ior_dir.str(),Point(20,20),FONT_HERSHEY_DUPLEX,1,color);
-    imshow("gray",thresh);
-    imshow("frame",frame);
-    key = waitKey(25)&0xFF;
+    putText(frame,ior_dir.str(),Point(20,25),FONT_HERSHEY_SIMPLEX,1,color);
+    //imshow("gray",thresh);
+    //imshow("frame",frame);
+    //key = waitKey(25)&0xFF;
 }

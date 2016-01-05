@@ -1,5 +1,6 @@
-#include"serial.h"
-#include"detecting.h"
+#include"../src/serial.h"
+#include"../src/detecting.h"
+#include"../src/convey.h"
 
 int main( int argc, char** argv )
 {
@@ -12,13 +13,23 @@ int main( int argc, char** argv )
         //printf("Open uart err \n");
         //return -1;
     //}
+    int sefd = 55,new_sockfd;
+    char ack;
     Detect dt;
-    dt.detectinit(0);
+    Convey conv;
+    dt.detectinit(1);
+    conv.socketinit(sefd);
+    cout<<sefd<<endl;
+    new_sockfd = conv.accept_m(sefd);
+    cout<<new_sockfd<<endl;
     while(1)
     {
         dt.detecting();
-        if(dt.key == 'q') break;
+        conv.sendimg(new_sockfd,dt.frame);
+        if(!conv.recvall(new_sockfd,&ack,1)) break;
     }
+    close(new_sockfd);
+    close(sefd);
     //sprintf(buf, "Hello world !\n");   //输出内容
   
     //while(1)
