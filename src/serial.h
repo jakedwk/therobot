@@ -22,5 +22,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <bits/signum.h>
+#include <sys/resource.h>
 int uart_init(char* arg, int baud);
 #endif
