@@ -18,8 +18,6 @@
 #include <errno.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <thread>
-#include <mutex> 
 
 
 #define SERVPORT 5788
@@ -53,6 +51,8 @@ class  Convey
         void sendimg(int sockfd,InputArray frame);
         void recvimg(int sockfd,OutputArray frame);
         int recvall(int sockfd,void *ptr,uint len);
+        int senddata(int sockfd,vector<int> data,int len);
+        int recvdata(int sockfd,vector<int> &data);
         void clientinit(int &sockfd,const char* address = ADDRESS,int servport = SERVPORT);
 };
 

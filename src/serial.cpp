@@ -39,3 +39,16 @@ int uart_init(char* arg, int baud)
     return(fd);
 }
  
+void readbuf(int fd,const char* buf,int len)
+{
+    int num = 0;
+    while(len)
+    {
+        num = read(fd,&buf,len);
+        len = len - num;
+    }
+}
+void writebuf(int fd,const char* buf,int len)
+{
+    write(fd,buf,len);
+}

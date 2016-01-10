@@ -14,7 +14,7 @@ int Detect::ckcamera()
         cout<<"设备打开错误";
         return -1;
     }
-    for(int i=50;i>=0;i--)
+    for(int i=10;i>=0;i--)
     {
         cap >> frame;
     }
@@ -64,7 +64,8 @@ void Detect::detecting()
         ret = boundingRect(contours[0]);
         rectangle(frame,ret,color,2);
         ior_dir.str("");
-        ior_dir<<(ret.x + ret.width/2);
+        dir = ret.x + ret.width/2;
+        ior_dir<<dir;
     }
     putText(frame,ior_dir.str(),Point(20,25),FONT_HERSHEY_SIMPLEX,1,color);
     //imshow("gray",thresh);

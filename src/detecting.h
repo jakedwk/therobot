@@ -2,7 +2,6 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/opencv.hpp"
 #include <iostream>
 #include <fstream>
 #include <time.h>
@@ -25,7 +24,6 @@ using namespace cv;
 using namespace std;
 class  Detect
 {
-    Rect ret;
     time_t now_time;
     struct tm *p;
     char fmt_time[100];
@@ -51,7 +49,9 @@ class  Detect
     public:
         bool occ;
         char key;
+        Rect ret;
         ostringstream ior_dir;
+        int dir;
         Mat gray,avg,differ,frame,frameold,bigger,thresh;
         Detect();
         ~Detect();
