@@ -24,12 +24,14 @@ int main( int argc, char** argv )
     int sefd,new_sockfd;
     char ack = 'o';
     vector<int> data;
+    vector<short int> accxyz;
     Detect dt;
     Convey conv;
     dt.detectinit(-1);
     conv.socketinit(sefd);
     cout<<sefd<<endl;
-    data.resize(3);
+    data.resize(6);
+    accxyz.resize(3);
     while(1)
     {
         cout<<"accepting!"<<endl;
@@ -38,7 +40,16 @@ int main( int argc, char** argv )
         while(1)
         {
             dt.detecting();
-            if(serial_flag) write(serial_fd,&dt.dir,4);
+            if(serial_flag)
+            {
+                read(serial_fd,&accxyz,4*3);
+                write(serial_fd,&dt.dir,4);
+                for(int i=0;i<3;i++)
+                {
+                    data[i+3] = accxyz[i];
+                }
+
+            }
             load_data(data,&dt);
             conv.recvall(new_sockfd,&ack,1) ;
             if(ack== 'q') break;
@@ -49,7 +60,6 @@ int main( int argc, char** argv )
         if(ack == 's') break;
     }
     close(sefd);
-
 
 
 
