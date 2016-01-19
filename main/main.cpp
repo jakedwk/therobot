@@ -42,7 +42,7 @@ int main( int argc, char** argv )
             dt.detecting();
             if(serial_flag)
             {
-                read(serial_fd,&accxyz,4*3);
+                read(serial_fd,&accxyz[0],2*3);
                 write(serial_fd,&dt.dir,4);
                 for(int i=0;i<3;i++)
                 {
