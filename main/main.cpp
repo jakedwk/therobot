@@ -16,12 +16,15 @@ int main( int argc, char** argv )
 {
     bool serial_flag = false;
     int serial_fd;
-    if((serial_fd = uart_init((char*)"ttyACM0", 0)) <0)   //打开串口，波特率为115200；
+    int numall;
+    char a = 'a';
+    if((serial_fd = uart_init((char*)"ttyACM0", 1)) <0)   //打开串口，波特率为115200；
     {
         printf("Open uart err \n");
+    }else
         serial_flag = 1;
-    }
     int sefd,new_sockfd;
+    int num;
     char ack = 'o';
     vector<int> data;
     vector<short int> accxyz;
@@ -42,11 +45,19 @@ int main( int argc, char** argv )
             dt.detecting();
             if(serial_flag)
             {
-                read(serial_fd,&accxyz[0],2*3);
-                write(serial_fd,&dt.dir,4);
+                write(serial_fd,&a,1);
+                cout<<"write serial done!"<<endl;
+                numall = 6;
+                while(numall)
+                {
+                    num = read(serial_fd,&accxyz[0],numall);
+                    numall = numall - num;
+                }
+                cout<<"num"<<num<<endl;
                 for(int i=0;i<3;i++)
                 {
                     data[i+3] = accxyz[i];
+                    cout<<accxyz[i]<<endl;
                 }
 
             }
